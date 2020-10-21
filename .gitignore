@@ -1,0 +1,18 @@
+server/node_modules/**/*
+DoneWithIt/node_modules/**/*
+DoneWithIt/.expo/*
+DoneWithIt/npm-debug.*
+DoneWithIt/*.jks
+DoneWithIt/*.p8
+DoneWithIt/*.p12
+DoneWithIt/*.key
+DoneWithIt/*.mobileprovision
+DoneWithIt/*.orig.*
+DoneWithIt/web-build/
+
+# macOS
+*/.DS_Store
+
+*/.vscode
+server/.env
+DoneWithIt/.env
