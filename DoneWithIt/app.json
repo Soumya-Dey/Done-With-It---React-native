@@ -21,6 +21,10 @@
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
+    },
+    "description": "An app to sell things that you don't need anymore built with react native.",
+    "android": {
+      "package": "com.soumyadey.DoneWithIt"
     }
   }
 }

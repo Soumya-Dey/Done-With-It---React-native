@@ -1,6 +1,4 @@
-// TODO: Change nqrok url to hosted url after deploy
-
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   TextInput,
   StyleSheet,
@@ -12,12 +10,11 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
-import axios from "axios";
+import { connect } from "react-redux";
 
-import { AuthContext } from "../../context";
+import { login } from "../../actions/auth";
 
-export const SignIn = ({ navigation }) => {
-  const { signIn } = useContext(AuthContext);
+const SignIn = ({ navigation, login, loading }) => {
   const [passwordVisibility, setpasswordVisibility] = useState(false);
 
   return (
@@ -27,11 +24,7 @@ export const SignIn = ({ navigation }) => {
           initialValues={{ email: "", password: "" }}
           onSubmit={async (values, actions) => {
             try {
-              const res = await axios.post(
-                "http://ef38aeb08d3e.ngrok.io/api/auth/login",
-                values
-              );
-              res && signIn(res.data.token);
+              login(values);
               actions.resetForm();
             } catch (error) {
               console.log(error);
@@ -44,6 +37,8 @@ export const SignIn = ({ navigation }) => {
                 <Ionicons name="md-mail" size={18} color="gray" />
                 <TextInput
                   placeholder="Enter email"
+                  textContentType="emailAddress"
+                  keyboardType="email-address"
                   onChangeText={props.handleChange("email")}
                   value={props.values.email}
                   style={styles.textInput}
@@ -74,7 +69,9 @@ export const SignIn = ({ navigation }) => {
                 activeOpacity={0.6}
                 onPress={props.handleSubmit}
               >
-                <Text style={styles.btnText}>Login</Text>
+                <Text style={styles.btnText}>
+                  {loading ? "loading..." : "Login"}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -149,3 +146,10 @@ const styles = StyleSheet.create({
     color: "#202020",
   },
 });
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
+});
+
+export default connect(mapStateToProps, { login })(SignIn);

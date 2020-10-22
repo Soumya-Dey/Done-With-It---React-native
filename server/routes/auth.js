@@ -17,6 +17,7 @@ router.post(
     check("password", "Please enter a valid password").exists(),
   ],
   async (req, res) => {
+    console.log("login route hit");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -85,6 +86,7 @@ router.post(
     }),
   ],
   async (req, res) => {
+    console.log("register route hit");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });

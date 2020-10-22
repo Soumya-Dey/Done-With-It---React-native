@@ -1,3 +1,4 @@
+.expo/*
 server/node_modules/**/*
 DoneWithIt/node_modules/**/*
 DoneWithIt/.expo/*

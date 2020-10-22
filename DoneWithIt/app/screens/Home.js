@@ -1,22 +1,11 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
+import { connect } from "react-redux";
 
-import { AuthContext } from "../../context";
+import { logout } from "../../actions/auth";
 
-export const Home = () => {
-  const apiCall = async () => {
-    try {
-      const res = await axios.get("http://ef38aeb08d3e.ngrok.io/api/auth");
-      console.log(res.data);
-    } catch (error) {
-      console.log("api error");
-      console.log(error);
-    }
-  };
-
-  const { signOut } = useContext(AuthContext);
-
+const Home = ({ logout }) => {
   return (
     <View style={styles.container}>
       <Text>Home screen</Text>
@@ -27,20 +16,9 @@ export const Home = () => {
           paddingVertical: 8,
         }}
         activeOpacity={0.6}
-        onPress={() => signOut()}
+        onPress={() => logout()}
       >
         <Text style={styles.btnText2}>Sign out</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          paddingVertical: 8,
-        }}
-        activeOpacity={0.6}
-        onPress={() => apiCall()}
-      >
-        <Text style={styles.btnText2}>call server</Text>
       </TouchableOpacity>
     </View>
   );
@@ -58,3 +36,9 @@ const styles = StyleSheet.create({
     color: "#202020",
   },
 });
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { logout })(Home);
