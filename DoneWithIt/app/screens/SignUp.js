@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
@@ -79,9 +80,14 @@ const SignUp = ({ navigation, register, loading }) => {
                 activeOpacity={0.6}
                 onPress={props.handleSubmit}
               >
-                <Text style={styles.btnText}>
-                  {loading ? "loading..." : "Register"}
-                </Text>
+                {!loading ? (
+                  <Text style={styles.btnText}>Register</Text>
+                ) : (
+                  <Image
+                    source={require("../assets/loading.gif")}
+                    style={styles.loading}
+                  ></Image>
+                )}
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -153,6 +159,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 14,
     color: "#202020",
+  },
+  loading: {
+    width: 22,
+    height: 22,
   },
 });
 

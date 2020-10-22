@@ -4,9 +4,10 @@ import axios from "axios";
 import { connect } from "react-redux";
 
 import { logout } from "../../actions/auth";
+import Splash from "./Splash";
 
-const Home = ({ logout }) => {
-  return (
+const Home = ({ logout, isAuthenticated, loading }) => {
+  return isAuthenticated && !loading ? (
     <View style={styles.container}>
       <Text>Home screen</Text>
       <TouchableOpacity
@@ -21,6 +22,8 @@ const Home = ({ logout }) => {
         <Text style={styles.btnText2}>Sign out</Text>
       </TouchableOpacity>
     </View>
+  ) : (
+    <Splash />
   );
 };
 
@@ -39,6 +42,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
 });
 
 export default connect(mapStateToProps, { logout })(Home);
