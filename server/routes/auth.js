@@ -3,9 +3,25 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const authToken = require("../middleware/auth");
 const User = require("../models/User");
 
 const router = express.Router();
+
+// @route GET api/auth/me
+// @desc get currently logged in user
+// @access Private
+router.get("/me", authToken, async (req, res) => {
+  try {
+    // return the user without password field if token is authorized
+    const user = await User.findById(req.user.id).select("-password");
+
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("server error");
+  }
+});
 
 // @route POST api/auth/login
 // @desc login user and get token
