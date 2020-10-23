@@ -12,6 +12,7 @@ app.use(express.json({ extended: false }));
 connectDb();
 
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/product", require("./routes/product"));
 
 // // serve static assets in production
 // if (process.env.NODE_ENV === "production") {

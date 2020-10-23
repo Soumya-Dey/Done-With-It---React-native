@@ -16,11 +16,19 @@ const ProductSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  category: {
+    type: String,
+    required: true,
+  },
   location: {
     type: String,
     required: true,
   },
   imageUrls: [String],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Product = mongoose.model("Product", ProductSchema);
