@@ -1,15 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import axios from "axios";
 import { connect } from "react-redux";
 
 import { logout } from "../../actions/auth";
 import Splash from "./Splash";
 
-const Home = ({ logout, isAuthenticated, loading }) => {
-  return isAuthenticated && !loading ? (
+const Home = ({ logout, isAuthenticated, loading, user }) => {
+  return isAuthenticated && !loading && user ? (
     <View style={styles.container}>
-      <Text>Home screen</Text>
+      <Text>{user.email}</Text>
       <TouchableOpacity
         style={{
           alignItems: "center",
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   loading: state.auth.loading,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { logout })(Home);

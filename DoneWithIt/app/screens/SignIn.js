@@ -25,8 +25,9 @@ const SignIn = ({ navigation, login, loading }) => {
           initialValues={{ email: "", password: "" }}
           onSubmit={async (values, actions) => {
             try {
+              Keyboard.dismiss();
               login(values);
-              actions.resetForm();
+              // actions.resetForm();
             } catch (error) {
               console.log(error);
             }
@@ -74,7 +75,7 @@ const SignIn = ({ navigation, login, loading }) => {
                   <Text style={styles.btnText}>Login</Text>
                 ) : (
                   <Image
-                    source={require("../assets/loading.gif")}
+                    source={require("../assets/loading_btn_1.gif")}
                     style={styles.loading}
                   ></Image>
                 )}

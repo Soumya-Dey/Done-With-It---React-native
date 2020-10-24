@@ -1,7 +1,8 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import { setAlert } from "./alert";
-// import setAuthToken from "../utils/setAuthToken";
+import setAuthToken from "../utils/setAuthToken";
 import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
@@ -15,29 +16,34 @@ import {
 } from "./types";
 import { serverDomainUrl } from "../serverUrl";
 
-// // for loading and authenticating user with token
-// export const loadUser = () => async (dispatch) => {
-//   // setting the token to the headers globally
-//   if (localStorage.token) setAuthToken(localStorage.token);
+// for loading and authenticating user with token
+export const loadUser = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: LOADING,
+    });
 
-//   try {
-//     // get the user data
-//     // don't need to pass the header
-//     // as the token is already in the header globally
-//     // returns user data -> name, email...
-//     const res = await axios.get("/api/auth");
+    // setting the token to the headers globally
+    const token = await AsyncStorage.getItem("token");
+    if (token !== null) setAuthToken(token);
 
-//     // send the user data to the reducer
-//     dispatch({
-//       type: USER_LOADED,
-//       payload: res.data,
-//     });
-//   } catch (error) {
-//     dispatch({
-//       type: AUTH_ERROR,
-//     });
-//   }
-// };
+    // get the user data
+    // don't need to pass the header
+    // as the token is already in the header globally
+    // returns user data -> name, email...
+    const res = await axios.get(`${serverDomainUrl}/api/auth/me`);
+
+    // send the user data to the reducer
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
+};
 
 // for registering user
 export const register = ({ name, email, password }) => async (dispatch) => {
@@ -60,7 +66,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     });
 
     // load user after registration
-    // dispatch(loadUser());
+    dispatch(loadUser());
   } catch (error) {
     const errArr = error.response.data.errors;
 
@@ -97,7 +103,7 @@ export const login = ({ email, password }) => async (dispatch) => {
     });
 
     // load the user after login
-    // dispatch(loadUser());
+    dispatch(loadUser());
   } catch (error) {
     const errArr = error.response.data.errors;
 
@@ -163,7 +169,7 @@ export const login = ({ email, password }) => async (dispatch) => {
 // };
 
 // for loggin out user & clear profile
-export const logout = () => (dispatch) => {
+export const logout = () => async (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };

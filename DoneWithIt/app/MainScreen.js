@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { connect } from "react-redux";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import SignIn from "./screens/SignIn";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
+import { loadUser } from "../actions/auth";
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
@@ -40,31 +42,37 @@ const HomeStackScreen = () => (
 );
 
 const RootStack = createStackNavigator();
-const RootStackScreen = ({ isAuthenticated }) => (
-  <RootStack.Navigator headerMode="none">
-    {isAuthenticated ? (
-      <RootStack.Screen
-        name="HOme"
-        component={HomeStackScreen}
-        // options={{
-        //   animationEnabled: false
-        // }}
-      />
-    ) : (
-      <RootStack.Screen
-        name="Auth"
-        component={AuthStackScreen}
-        // options={{
-        //   animationEnabled: false
-        // }}
-      />
-    )}
-  </RootStack.Navigator>
-);
+const RootStackScreen = ({ isAuthenticated, loadUser }) => {
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  return (
+    <RootStack.Navigator headerMode="none">
+      {isAuthenticated ? (
+        <RootStack.Screen
+          name="Home"
+          component={HomeStackScreen}
+          // options={{
+          //   animationEnabled: false
+          // }}
+        />
+      ) : (
+        <RootStack.Screen
+          name="Auth"
+          component={AuthStackScreen}
+          // options={{
+          //   animationEnabled: false
+          // }}
+        />
+      )}
+    </RootStack.Navigator>
+  );
+};
 
 const mapStateToProps = (state) => ({
   loading: state.auth.loading,
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps)(RootStackScreen);
+export default connect(mapStateToProps, { loadUser })(RootStackScreen);

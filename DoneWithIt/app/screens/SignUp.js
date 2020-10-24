@@ -25,8 +25,9 @@ const SignUp = ({ navigation, register, loading }) => {
           initialValues={{ name: "", email: "", password: "" }}
           onSubmit={async (values, actions) => {
             try {
+              Keyboard.dismiss();
               register(values);
-              actions.resetForm();
+              // actions.resetForm();
             } catch (error) {
               console.log(error);
             }
@@ -84,7 +85,7 @@ const SignUp = ({ navigation, register, loading }) => {
                   <Text style={styles.btnText}>Register</Text>
                 ) : (
                   <Image
-                    source={require("../assets/loading.gif")}
+                    source={require("../assets/loading_btn_2.gif")}
                     style={styles.loading}
                   ></Image>
                 )}
