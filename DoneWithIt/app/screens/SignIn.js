@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
 import { login } from "../../actions/auth";
+import Alert from "../components/Alert";
 
 const SignIn = ({ navigation, login, loading }) => {
   const [passwordVisibility, setpasswordVisibility] = useState(false);
@@ -21,6 +22,7 @@ const SignIn = ({ navigation, login, loading }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
+        <Alert />
         <Formik
           initialValues={{ email: "", password: "" }}
           onSubmit={async (values, actions) => {
