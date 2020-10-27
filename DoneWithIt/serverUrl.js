@@ -1,3 +1,3 @@
-export const serverDomainUrl = "http://dd76a430ea00.ngrok.io";
+export const serverDomainUrl = "http://9784754da3e6.ngrok.io";
 
 // TODO: Change nqrok url to hosted url after deploy
