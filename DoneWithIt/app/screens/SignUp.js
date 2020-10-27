@@ -12,6 +12,7 @@ import {
 import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
+import Alert from "../components/Alert";
 
 import { register } from "../../actions/auth";
 
@@ -21,6 +22,7 @@ const SignUp = ({ navigation, register, loading }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
+        <Alert />
         <Formik
           initialValues={{ name: "", email: "", password: "" }}
           onSubmit={async (values, actions) => {
