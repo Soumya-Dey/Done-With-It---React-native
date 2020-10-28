@@ -2,6 +2,10 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const twilio = require("twilio")(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 const authToken = require("../middleware/auth");
 const User = require("../models/User");
@@ -22,6 +26,96 @@ router.get("/me", authToken, async (req, res) => {
     res.status(500).send("server error");
   }
 });
+
+// @route POST api/auth/phone/register
+// @desc register user using phone number
+// @access Public
+router.post(
+  "/phone/register",
+  [check("phone", "Please enter a valid phone number").isMobilePhone("any")],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { phone } = req.body;
+
+      if (phone) {
+        twilio.verify
+          .services(process.env.TWILIO_SERVICE_SID)
+          .verifications.create({ to: phone, channel: "sms" })
+          .then(async (verification) => {
+            const user = await User.findOneAndUpdate(
+              { "phone.phoneNumber": phone },
+              { $set: { "phone.phoneNumber": phone, "phone.verified": false } },
+              { new: true, upsert: true }
+            );
+
+            return res.json({ verification, user });
+          })
+          .catch((err) =>
+            res.status(400).json({
+              errors: [{ msg: "Unable to send OTP" }],
+            })
+          );
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("server error");
+    }
+  }
+);
+
+// @route POST api/auth/phone/verify
+// @desc verify user using otp code
+// @access Public
+router.post(
+  "/phone/verify",
+  [
+    check("phone", "Please enter a valid phone number").isMobilePhone("any"),
+    check("code", "Please enter a valid OTP").isLength({ min: 6, max: 6 }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { phone, code } = req.body;
+
+      if (phone && code) {
+        twilio.verify
+          .services(process.env.TWILIO_SERVICE_SID)
+          .verificationChecks.create({ to: phone, code })
+          .then(async (verificationCheck) => {
+            const user = await User.findOneAndUpdate(
+              { "phone.phoneNumber": phone },
+              { $set: { "phone.verified": true } },
+              { new: true }
+            );
+
+            if (!user)
+              return res.status(400).json({
+                errors: [{ msg: "Unable to verify user" }],
+              });
+
+            return res.json({ verificationCheck, user });
+          })
+          .catch((err) =>
+            res.status(400).json({
+              errors: [{ msg: "Unable to verify user" }],
+            })
+          );
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("server error");
+    }
+  }
+);
 
 // @route POST api/auth/login
 // @desc login user and get token
