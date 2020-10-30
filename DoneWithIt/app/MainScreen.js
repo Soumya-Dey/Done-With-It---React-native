@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import SignIn from "./screens/SignIn";
+import SignInMobile from "./screens/SignInMobile";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
 import Profile from "./screens/Profile";
@@ -16,6 +17,14 @@ import { Text, View } from "react-native";
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
+    <AuthStack.Screen
+      name="Sign In"
+      component={SignInMobile}
+      options={{
+        title: "Sign In",
+        headerTitleAlign: "center",
+      }}
+    ></AuthStack.Screen>
     <AuthStack.Screen
       name="Login"
       component={SignIn}

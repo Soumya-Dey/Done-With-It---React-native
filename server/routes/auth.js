@@ -55,11 +55,12 @@ router.post(
 
             return res.json({ verification, user });
           })
-          .catch((err) =>
-            res.status(400).json({
+          .catch((err) => {
+            console.log(err);
+            return res.status(400).json({
               errors: [{ msg: "Unable to send OTP" }],
-            })
-          );
+            });
+          });
       }
     } catch (error) {
       console.log(error);
