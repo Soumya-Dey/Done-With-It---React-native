@@ -10,6 +10,7 @@ import {
   LOGOUT,
   ACCOUNT_DELETED,
   LOADING,
+  STOP_LOADING,
 } from "../actions/types";
 
 const initialState = {
@@ -25,6 +26,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case STOP_LOADING:
+      return {
+        ...state,
+        loading: false,
       };
     // authenticating a user
     case USER_LOADED:

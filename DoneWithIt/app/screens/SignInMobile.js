@@ -13,10 +13,10 @@ import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
-import { login } from "../../actions/auth";
+import { signInPhone, verifyOtp } from "../../actions/auth";
 import Alert from "../components/Alert";
 
-const SignInMobile = ({ navigation, login, loading }) => {
+const SignInMobile = ({ navigation, signInPhone, verifyOtp, loading }) => {
   const [otpVisibility, setOtpVisibility] = useState(true);
   const [otpTextBoxVisibility, setOtpTextBoxVisibility] = useState(false);
 
@@ -28,15 +28,15 @@ const SignInMobile = ({ navigation, login, loading }) => {
           initialValues={{ phone: "", otp: "" }}
           onSubmit={async (values, actions) => {
             try {
+              const { phone, otp } = values;
               Keyboard.dismiss();
-              if (!values.otp && values.phone) {
+
+              if (!otp && phone) {
+                signInPhone({ phone });
                 setOtpTextBoxVisibility(true);
-              } else {
+              } else if (otp && phone) {
+                verifyOtp({ phone, code: otp });
               }
-              // TODO: ADD ACTIONS AND REDUCERS FOR LOGIN WITH OTP
-              console.log(values);
-              //   login(values);
-              // actions.resetForm();
             } catch (error) {
               console.log(error);
             }
@@ -64,7 +64,7 @@ const SignInMobile = ({ navigation, login, loading }) => {
                     textContentType="oneTimeCode"
                     secureTextEntry={!otpVisibility}
                     keyboardType="numeric"
-                    placeholder="Enter OTP"
+                    placeholder="OTP"
                     onChangeText={props.handleChange("otp")}
                     value={props.values.otp}
                     style={styles.textInput2}
@@ -180,4 +180,6 @@ const mapStateToProps = (state) => ({
   loading: state.auth.loading,
 });
 
-export default connect(mapStateToProps, { login })(SignInMobile);
+export default connect(mapStateToProps, { signInPhone, verifyOtp })(
+  SignInMobile
+);

@@ -13,6 +13,7 @@ import {
   LOGOUT,
   CLEAR_PROFILE,
   LOADING,
+  STOP_LOADING,
 } from "./types";
 import { serverDomainUrl } from "../serverUrl";
 
@@ -41,6 +42,73 @@ export const loadUser = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: AUTH_ERROR,
+    });
+  }
+};
+
+// for registering with phone number
+export const signInPhone = ({ phone }) => async (dispatch) => {
+  try {
+    dispatch({
+      type: LOADING,
+    });
+
+    await axios.post(
+      `${serverDomainUrl}/api/auth/phone/register`,
+      JSON.stringify({ phone }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    dispatch({
+      type: STOP_LOADING,
+    });
+  } catch (error) {
+    const errArr = error.response.data.errors;
+
+    // send the errors to the alert reducer
+    if (errArr) {
+      errArr.forEach((errItem) => dispatch(setAlert(errItem.msg, "danger")));
+    }
+
+    dispatch({
+      type: LOGIN_FAILURE,
+    });
+  }
+};
+
+// for verifying phone with otp
+export const verifyOtp = ({ phone, code }) => async (dispatch) => {
+  try {
+    dispatch({
+      type: LOADING,
+    });
+
+    // get the token after logging in
+    // returns the token upon sucessfull authentication
+    const res = await axios.post(
+      `${serverDomainUrl}/api/auth/phone/verify`,
+      JSON.stringify({ phone, code }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    // send the token to the reducer
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+
+    // load the user after login
+    dispatch(loadUser());
+  } catch (error) {
+    const errArr = error.response.data.errors;
+
+    // send the errors to the alert reducer
+    if (errArr) {
+      errArr.forEach((errItem) => dispatch(setAlert(errItem.msg, "danger")));
+    }
+
+    dispatch({
+      type: LOGIN_FAILURE,
     });
   }
 };

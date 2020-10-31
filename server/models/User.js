@@ -4,6 +4,7 @@ const UserSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
+    default: "New user",
   },
   email: {
     type: String,
@@ -20,7 +21,6 @@ const UserSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   date: {
     type: Date,

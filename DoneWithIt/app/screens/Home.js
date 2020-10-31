@@ -8,7 +8,7 @@ import Splash from "./Splash";
 const Home = ({ logout, isAuthenticated, loading, user }) => {
   return isAuthenticated && !loading && user ? (
     <View style={styles.container}>
-      <Text>{user.email}</Text>
+      <Text>{user.toString()}</Text>
       <TouchableOpacity
         style={{
           alignItems: "center",
@@ -22,7 +22,9 @@ const Home = ({ logout, isAuthenticated, loading, user }) => {
       </TouchableOpacity>
     </View>
   ) : (
-    <Splash />
+    <View>
+      <Splash />
+    </View>
   );
 };
 

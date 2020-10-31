@@ -76,7 +76,7 @@ router.post(
   "/phone/verify",
   [
     check("phone", "Please enter a valid phone number").isMobilePhone("any"),
-    check("code", "Please enter a valid OTP").isLength({ min: 6, max: 6 }),
+    // check("code", "Please enter a valid OTP").isLength({ min: 6, max: 6 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -92,24 +92,54 @@ router.post(
           .services(process.env.TWILIO_SERVICE_SID)
           .verificationChecks.create({ to: phone, code })
           .then(async (verificationCheck) => {
-            const user = await User.findOneAndUpdate(
-              { "phone.phoneNumber": phone },
-              { $set: { "phone.verified": true } },
-              { new: true }
-            );
-
-            if (!user)
-              return res.status(400).json({
-                errors: [{ msg: "Unable to verify user" }],
+            if (verificationCheck.status === "approved") {
+              const currentUser = await User.findOne({
+                "phone.phoneNumber": phone,
               });
 
-            return res.json({ verificationCheck, user });
+              if (!currentUser)
+                return res.status(400).json({
+                  errors: [{ msg: "Unable to verify user" }],
+                });
+
+              // change verified status and save
+              currentUser.phone.verified = true;
+              await currentUser.save();
+
+              // return json web token
+              // to keep user signed in
+              const payload = {
+                user: {
+                  // getting "_id" from the user model
+                  id: currentUser.id,
+                },
+              };
+
+              jwt.sign(
+                payload,
+                process.env.JWT_SECRET,
+                { expiresIn: 360000 },
+                async (err, token) => {
+                  if (err) {
+                    console.log("here errr");
+                    throw err;
+                  }
+
+                  res.json({ token: token });
+                }
+              );
+            } else {
+              res.status(400).json({
+                errors: [{ msg: "Invalid credentials" }],
+              });
+            }
           })
-          .catch((err) =>
-            res.status(400).json({
+          .catch((err) => {
+            console.log(err);
+            return res.status(400).json({
               errors: [{ msg: "Unable to verify user" }],
-            })
-          );
+            });
+          });
       }
     } catch (error) {
       console.log(error);
