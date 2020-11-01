@@ -1,13 +1,24 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { connect } from "react-redux";
 
 import { logout } from "../../actions/auth";
 import Splash from "./Splash";
+import ProductCard from "../components/ProductCard";
 
 const Home = ({ logout, isAuthenticated, loading, user }) => {
+  const statusBarHeight = StatusBar.currentHeight + 18;
+
   return isAuthenticated && !loading && user ? (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, paddingTop: statusBarHeight }}>
+      {/* <ProductCard /> */}
+      {/* TODO: add a scrollable list of product cards */}
       <Text>{user.email || user.phone.phoneNumber}</Text>
       <TouchableOpacity
         style={{
@@ -29,8 +40,9 @@ const Home = ({ logout, isAuthenticated, loading, user }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
+    padding: 18,
   },
   btnText2: {
     fontWeight: "bold",

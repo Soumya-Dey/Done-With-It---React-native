@@ -46,7 +46,7 @@ const AuthStackScreen = () => (
 
 const FeedStack = createStackNavigator();
 const FeedStackScreen = () => (
-  <FeedStack.Navigator>
+  <FeedStack.Navigator headerMode="none">
     <FeedStack.Screen
       name="Home"
       component={Home}
