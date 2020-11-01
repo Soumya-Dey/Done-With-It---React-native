@@ -102,7 +102,18 @@ const SignUp = ({ navigation, register, loading }) => {
                 activeOpacity={0.6}
                 onPress={() => navigation.pop()}
               >
-                <Text style={styles.btnText2}>Login Here</Text>
+                <Text style={styles.btnText2}>Login with email</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingVertical: 8,
+                }}
+                activeOpacity={0.6}
+                onPress={() => navigation.push("Sign In")}
+              >
+                <Text style={styles.btnText2}>Sign In with Phone</Text>
               </TouchableOpacity>
             </View>
           )}

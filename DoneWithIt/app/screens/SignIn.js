@@ -94,6 +94,17 @@ const SignIn = ({ navigation, login, loading }) => {
               >
                 <Text style={styles.btnText2}>Register Here</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingVertical: 8,
+                }}
+                activeOpacity={0.6}
+                onPress={() => navigation.push("Sign In")}
+              >
+                <Text style={styles.btnText2}>Sign In with Phone</Text>
+              </TouchableOpacity>
             </View>
           )}
         </Formik>
