@@ -22,9 +22,7 @@ const Home = ({ logout, isAuthenticated, loading, user }) => {
       </TouchableOpacity>
     </View>
   ) : (
-    <View>
-      <Splash />
-    </View>
+    <Splash />
   );
 };
 

@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  Dimensions,
 } from "react-native";
 import { Formik } from "formik";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,21 +21,24 @@ const SignInMobile = ({ navigation, signInPhone, verifyOtp, loading }) => {
   const [otpVisibility, setOtpVisibility] = useState(true);
   const [otpTextBoxVisibility, setOtpTextBoxVisibility] = useState(false);
 
+  const width = Dimensions.get("window").width - 84;
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <Alert />
         <Formik
-          initialValues={{ phone: "", otp: "" }}
+          initialValues={{ countryCode: "+91", phoneNumber: "", otp: "" }}
           onSubmit={async (values, actions) => {
             try {
-              const { phone, otp } = values;
+              const { countryCode, phoneNumber, otp } = values;
+              const phone = countryCode + phoneNumber;
               Keyboard.dismiss();
 
-              if (!otp && phone) {
+              if (!otp && phoneNumber) {
                 signInPhone({ phone });
                 setOtpTextBoxVisibility(true);
-              } else if (otp && phone) {
+              } else if (otp && phoneNumber) {
                 verifyOtp({ phone, code: otp });
               }
             } catch (error) {
@@ -44,17 +48,41 @@ const SignInMobile = ({ navigation, signInPhone, verifyOtp, loading }) => {
         >
           {(props) => (
             <View>
-              <View style={styles.textContainer}>
-                <Ionicons name="md-call" size={20} color="gray" />
-                <TextInput
-                  placeholder="Enter Phone Number"
-                  textContentType="telephoneNumber"
-                  keyboardType="phone-pad"
-                  editable={!otpTextBoxVisibility}
-                  onChangeText={props.handleChange("phone")}
-                  value={props.values.phone}
-                  style={styles.textInput}
-                />
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{
+                    ...styles.textContainer,
+                    width: width * 0.3,
+                    marginRight: 12,
+                  }}
+                >
+                  <Ionicons name="md-call" size={20} color="gray" />
+                  <TextInput
+                    textContentType="telephoneNumber"
+                    keyboardType="phone-pad"
+                    editable={!otpTextBoxVisibility}
+                    onChangeText={props.handleChange("countryCode")}
+                    value={props.values.countryCode}
+                    style={styles.textInput}
+                  />
+                </View>
+                <View
+                  style={{
+                    ...styles.textContainer,
+                    paddingHorizontal: 8,
+                    width: width * 0.7,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Enter Phone Number"
+                    textContentType="telephoneNumber"
+                    keyboardType="phone-pad"
+                    editable={!otpTextBoxVisibility}
+                    onChangeText={props.handleChange("phoneNumber")}
+                    value={props.values.phoneNumber}
+                    style={styles.textInput}
+                  />
+                </View>
               </View>
 
               {otpTextBoxVisibility && (
@@ -119,11 +147,15 @@ const styles = StyleSheet.create({
     paddingTop: 120,
     paddingHorizontal: 36,
   },
+  textBoxContainer: {
+    width: "100%",
+    flexDirection: "row",
+  },
   textContainer: {
     position: "relative",
     width: "100%",
     backgroundColor: "#dfe4ea",
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
     marginBottom: 18,
     borderRadius: 30,
     flexDirection: "row",
