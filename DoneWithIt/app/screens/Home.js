@@ -7,18 +7,18 @@ import {
   StatusBar,
 } from "react-native";
 import { connect } from "react-redux";
+import Constants from "expo-constants";
 
 import { logout } from "../../actions/auth";
 import Splash from "./Splash";
 import ProductCard from "../components/ProductCard";
 
 const Home = ({ logout, isAuthenticated, loading, user }) => {
-  const statusBarHeight = StatusBar.currentHeight + 18;
-
   return isAuthenticated && !loading && user ? (
-    <View style={{ ...styles.container, paddingTop: statusBarHeight }}>
-      {/* <ProductCard /> */}
-      {/* TODO: add a scrollable list of product cards */}
+    <View style={styles.container}>
+      <ProductCard />
+      <ProductCard />
+      {/* TODO: add a scrollable list of product cards. USE FLATLIST*/}
       <Text>{user.email || user.phone.phoneNumber}</Text>
       <TouchableOpacity
         style={{
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // alignItems: "center",
     padding: 18,
+    paddingTop: Constants.statusBarHeight + 18,
   },
   btnText2: {
     fontWeight: "bold",

@@ -31,15 +31,15 @@ const SignInMobile = ({ navigation, signInPhone, verifyOtp, loading }) => {
           initialValues={{ countryCode: "+91", phoneNumber: "", otp: "" }}
           onSubmit={async (values, actions) => {
             try {
-              const { countryCode, phoneNumber, otp } = values;
-              const phone = countryCode + phoneNumber;
+              const { phoneNumber, otp } = values;
+              // const phone = countryCode + phoneNumber;
               Keyboard.dismiss();
 
               if (!otp && phoneNumber) {
-                signInPhone({ phone });
+                signInPhone({ phone: phoneNumber });
                 setOtpTextBoxVisibility(true);
               } else if (otp && phoneNumber) {
-                verifyOtp({ phone, code: otp });
+                verifyOtp({ phone: phoneNumber, code: otp });
               }
             } catch (error) {
               console.log(error);

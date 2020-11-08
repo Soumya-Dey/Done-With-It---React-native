@@ -2,10 +2,7 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const twilio = require("twilio")(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+const axios = require("axios");
 const fast2sms = require("fast-two-sms");
 
 const authToken = require("../middleware/auth");
@@ -46,20 +43,34 @@ router.post(
       const { phone } = req.body;
 
       if (phone) {
-        const code = generateOtp(6);
+        const code = generateOtp(5);
 
-        const options = {
+        const headers = {
+          "content-type": "application/json",
+          "cache-control": "no-cache",
           authorization: process.env.FAST2SMS_KEY,
-          message: `Your code for DoneWithIt is: ${code}. This code is valid for 5 minutes.`,
-          numbers: [phone],
         };
 
-        const response = await fast2sms.sendMessage(options);
+        const body = {
+          sender_id: "FSTSMS",
+          language: "english",
+          route: "qt",
+          numbers: phone,
+          message: "39288",
+          variables: "{#AA#}",
+          variables_values: code,
+        };
+
+        const response = await axios.post(
+          "https://www.fast2sms.com/dev/bulk",
+          JSON.stringify(body),
+          { headers }
+        );
 
         const payload = {
           verify: {
             code,
-            requestId: response.request_id,
+            requestId: response.data.request_id,
           },
         };
 
@@ -92,7 +103,7 @@ router.post(
 
             await otpToken.save();
 
-            res.json(response);
+            res.json({ ...response.data, code });
           }
         );
       }
@@ -110,7 +121,7 @@ router.post(
   "/phone/verify",
   [
     check("phone", "Please enter a valid phone number").isMobilePhone("any"),
-    check("code", "Please enter a valid OTP").isLength({ min: 6, max: 6 }),
+    check("code", "Please enter a valid OTP").isLength({ min: 5, max: 5 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -137,7 +148,7 @@ router.post(
 
         if (!currentOtpToken)
           return res.status(400).json({
-            errors: [{ msg: "Invalid credentials" }],
+            errors: [{ msg: "Invalid credentials: no otp token" }],
           });
 
         const decodedPayload = jwt.verify(
@@ -149,6 +160,8 @@ router.post(
           // change verified status and save
           currentUser.phone.verified = true;
           await currentUser.save();
+
+          await OtpToken.deleteMany({ user: currentUser.id });
 
           // return json web token
           // to keep user signed in
@@ -174,7 +187,7 @@ router.post(
           );
         } else {
           res.status(400).json({
-            errors: [{ msg: "Invalid credentials" }],
+            errors: [{ msg: "Invalid credentials: otp mismatch" }],
           });
         }
       }
