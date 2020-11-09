@@ -12,8 +12,8 @@ import {
   AUTH_ERROR,
   LOGOUT,
   CLEAR_PROFILE,
-  LOADING,
-  STOP_LOADING,
+  AUTH_LOADING,
+  STOP_AUTH_LOADING,
 } from "./types";
 import { serverDomainUrl } from "../serverUrl";
 
@@ -21,7 +21,7 @@ import { serverDomainUrl } from "../serverUrl";
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: AUTH_LOADING,
     });
 
     // setting the token to the headers globally
@@ -50,7 +50,7 @@ export const loadUser = () => async (dispatch) => {
 export const signInPhone = ({ phone }) => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: AUTH_LOADING,
     });
 
     await axios.post(
@@ -60,7 +60,7 @@ export const signInPhone = ({ phone }) => async (dispatch) => {
     );
 
     dispatch({
-      type: STOP_LOADING,
+      type: STOP_AUTH_LOADING,
     });
   } catch (error) {
     const errArr = error.response.data.errors;
@@ -80,7 +80,7 @@ export const signInPhone = ({ phone }) => async (dispatch) => {
 export const verifyOtp = ({ phone, code }) => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: AUTH_LOADING,
     });
 
     // get the token after logging in
@@ -117,7 +117,7 @@ export const verifyOtp = ({ phone, code }) => async (dispatch) => {
 export const register = ({ name, email, password }) => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: AUTH_LOADING,
     });
     // get the token after register
     // returns the token upon sucessfull authentication
@@ -153,7 +153,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
 export const login = ({ email, password }) => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: AUTH_LOADING,
     });
 
     // get the token after logging in
@@ -238,6 +238,6 @@ export const login = ({ email, password }) => async (dispatch) => {
 
 // for loggin out user & clear profile
 export const logout = () => async (dispatch) => {
-  dispatch({ type: CLEAR_PROFILE });
+  // dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };

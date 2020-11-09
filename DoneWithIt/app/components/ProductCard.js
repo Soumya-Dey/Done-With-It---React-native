@@ -1,22 +1,22 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const ProductCard = () => {
+const ProductCard = ({ item }) => {
   return (
     <TouchableOpacity activeOpacity={0.6} style={styles.cardContainer}>
       <Image
-        source={require("../assets/demo_product_2.jpg")}
+        source={{ uri: item.imageUrls[0] }}
         style={styles.productImage}
       ></Image>
       <View style={styles.infoContainer}>
         <View>
-          <Text style={styles.productName}>Black Woolen Sweater</Text>
+          <Text style={styles.productName}>{item.title}</Text>
           <Text style={styles.productDesc}>
-            Black Woolen Sweater with nice texture...
+            {item.description}
             {/* TODO: fix max length to 42 including the 3 dots */}
           </Text>
         </View>
-        <Text style={styles.productPrice}>$109.99</Text>
+        <Text style={styles.productPrice}>${item.priceInDollar}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -26,19 +26,22 @@ const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "#fff",
     borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-    marginBottom: 22,
+    borderWidth: 1,
+    borderColor: "#eee",
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 5,
+    // elevation: 5,
+    marginHorizontal: 18,
+    marginBottom: 18,
   },
   productImage: {
     width: "100%",
-    height: 140,
+    height: 150,
     opacity: 0.95,
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12,

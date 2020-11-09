@@ -9,6 +9,7 @@ import SignIn from "./screens/SignIn";
 import SignInMobile from "./screens/SignInMobile";
 import SignUp from "./screens/SignUp";
 import Home from "./screens/Home";
+import ProductDetails from "./screens/ProductDetails";
 import Profile from "./screens/Profile";
 import AddProduct from "./screens/AddProduct";
 import { loadUser } from "../actions/auth";
@@ -51,6 +52,11 @@ const FeedStackScreen = () => (
       name="Home"
       component={Home}
       options={{ title: "Home", headerTitleAlign: "center" }}
+    ></FeedStack.Screen>
+    <FeedStack.Screen
+      name="ProductDetails"
+      component={ProductDetails}
+      options={{ title: "Product Details", headerTitleAlign: "center" }}
     ></FeedStack.Screen>
   </FeedStack.Navigator>
 );
@@ -119,7 +125,7 @@ const HomeBottomTabsScreen = () => (
       activeTintColor: "#1dd1a1",
       inactiveTintColor: "gray",
       showLabel: false,
-      style: { height: 56 },
+      style: { height: 60 },
     }}
   >
     <HomeBottomTabs.Screen

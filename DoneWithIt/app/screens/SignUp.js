@@ -16,7 +16,7 @@ import Alert from "../components/Alert";
 
 import { register } from "../../actions/auth";
 
-const SignUp = ({ navigation, register, loading }) => {
+const SignUp = ({ navigation, register, authLoading }) => {
   const [passwordVisibility, setpasswordVisibility] = useState(false);
 
   return (
@@ -83,7 +83,7 @@ const SignUp = ({ navigation, register, loading }) => {
                 activeOpacity={0.6}
                 onPress={props.handleSubmit}
               >
-                {!loading ? (
+                {!authLoading ? (
                   <Text style={styles.btnText}>Register</Text>
                 ) : (
                   <Image
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  loading: state.auth.loading,
+  authLoading: state.auth.authLoading,
 });
 
 export default connect(mapStateToProps, { register })(SignUp);

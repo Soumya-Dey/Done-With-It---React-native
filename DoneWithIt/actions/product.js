@@ -2,11 +2,8 @@ import axios from "axios";
 
 import { setAlert } from "./alert";
 import {
-  GET_POST,
-  GET_POSTS,
-  POSTS_ERROR,
-  LOADING,
-  STOP_LOADING,
+  PRODUCT_LOADING,
+  STOP_PRODUCT_LOADING,
   GET_PRODUCT,
   PRODUCT_ERROR,
   GET_PRODUCTS,
@@ -14,10 +11,10 @@ import {
 import { serverDomainUrl } from "../serverUrl";
 
 // for getting a all product
-export const getAllPosts = () => async (dispatch) => {
+export const getAllProducts = () => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: PRODUCT_LOADING,
     });
 
     const res = await axios.get(`${serverDomainUrl}/api/product`);
@@ -41,10 +38,10 @@ export const getAllPosts = () => async (dispatch) => {
 };
 
 // for getting a single product
-export const getPost = ({ productId }) => async (dispatch) => {
+export const getProduct = ({ productId }) => async (dispatch) => {
   try {
     dispatch({
-      type: LOADING,
+      type: PRODUCT_LOADING,
     });
 
     const res = await axios.get(`${serverDomainUrl}/api/product/${productId}`);

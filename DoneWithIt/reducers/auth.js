@@ -9,28 +9,28 @@ import {
   AUTH_ERROR,
   LOGOUT,
   ACCOUNT_DELETED,
-  LOADING,
-  STOP_LOADING,
+  AUTH_LOADING,
+  STOP_AUTH_LOADING,
 } from "../actions/types";
 
 const initialState = {
   token: null,
   isAuthenticated: null,
-  loading: false,
+  authLoading: false,
   user: null,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case LOADING:
+    case AUTH_LOADING:
       return {
         ...state,
-        loading: true,
+        authLoading: true,
       };
-    case STOP_LOADING:
+    case STOP_AUTH_LOADING:
       return {
         ...state,
-        loading: false,
+        authLoading: false,
       };
     // authenticating a user
     case USER_LOADED:
@@ -38,7 +38,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isAuthenticated: true,
-        loading: false,
+        authLoading: false,
         user: action.payload,
       };
     // registering a new user
@@ -54,7 +54,7 @@ export default function (state = initialState, action) {
         ...state,
         ...action.payload,
         isAuthenticated: true,
-        loading: false,
+        authLoading: false,
       };
     // fail when registering
     // fail when logging in
@@ -71,7 +71,7 @@ export default function (state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
-        loading: false,
+        authLoading: false,
       };
     default:
       return state;

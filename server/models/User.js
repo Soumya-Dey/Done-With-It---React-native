@@ -12,7 +12,6 @@ const UserSchema = mongoose.Schema({
   phone: {
     phoneNumber: {
       type: String,
-      unique: true,
     },
     verified: {
       type: Boolean,

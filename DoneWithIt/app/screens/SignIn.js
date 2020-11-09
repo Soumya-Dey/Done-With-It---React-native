@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import { login } from "../../actions/auth";
 import Alert from "../components/Alert";
 
-const SignIn = ({ navigation, login, loading }) => {
+const SignIn = ({ navigation, login, authLoading }) => {
   const [passwordVisibility, setpasswordVisibility] = useState(false);
 
   return (
@@ -73,7 +73,7 @@ const SignIn = ({ navigation, login, loading }) => {
                 activeOpacity={0.6}
                 onPress={props.handleSubmit}
               >
-                {!loading ? (
+                {!authLoading ? (
                   <Text style={styles.btnText}>Login</Text>
                 ) : (
                   <Image
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  loading: state.auth.loading,
+  authLoading: state.auth.authLoading,
 });
 
 export default connect(mapStateToProps, { login })(SignIn);

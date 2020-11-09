@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { signInPhone, verifyOtp } from "../../actions/auth";
 import Alert from "../components/Alert";
 
-const SignInMobile = ({ navigation, signInPhone, verifyOtp, loading }) => {
+const SignInMobile = ({ navigation, signInPhone, verifyOtp, authLoading }) => {
   const [otpVisibility, setOtpVisibility] = useState(true);
   const [otpTextBoxVisibility, setOtpTextBoxVisibility] = useState(false);
 
@@ -112,7 +112,7 @@ const SignInMobile = ({ navigation, signInPhone, verifyOtp, loading }) => {
                 activeOpacity={0.6}
                 onPress={props.handleSubmit}
               >
-                {!loading ? (
+                {!authLoading ? (
                   <Text style={styles.btnText}>Submit</Text>
                 ) : (
                   <Image
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  loading: state.auth.loading,
+  authLoading: state.auth.authLoading,
 });
 
 export default connect(mapStateToProps, { signInPhone, verifyOtp })(

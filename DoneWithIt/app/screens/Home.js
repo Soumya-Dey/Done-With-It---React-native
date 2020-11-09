@@ -1,37 +1,75 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
+  SafeAreaView,
   Text,
   StyleSheet,
   TouchableOpacity,
-  StatusBar,
+  FlatList,
+  ScrollView,
 } from "react-native";
 import { connect } from "react-redux";
 import Constants from "expo-constants";
 
 import { logout } from "../../actions/auth";
+import { getAllProducts } from "../../actions/product";
 import Splash from "./Splash";
 import ProductCard from "../components/ProductCard";
 
-const Home = ({ logout, isAuthenticated, loading, user }) => {
-  return isAuthenticated && !loading && user ? (
-    <View style={styles.container}>
-      <ProductCard />
-      <ProductCard />
-      {/* TODO: add a scrollable list of product cards. USE FLATLIST*/}
-      <Text>{user.email || user.phone.phoneNumber}</Text>
-      <TouchableOpacity
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          paddingVertical: 8,
-        }}
-        activeOpacity={0.6}
-        onPress={() => logout()}
-      >
-        <Text style={styles.btnText2}>Sign out</Text>
-      </TouchableOpacity>
-    </View>
+const Home = ({
+  logout,
+  getAllProducts,
+  isAuthenticated,
+  productLoading,
+  authLoading,
+  user,
+  products,
+}) => {
+  useEffect(() => {
+    getAllProducts();
+  }, [getAllProducts]);
+
+  const renderItem = ({ item }) => <ProductCard item={item} />;
+
+  return isAuthenticated && !authLoading && !productLoading && user ? (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.pillContainer} horizontal={true}>
+        <TouchableOpacity
+          activeOpacity={0.2}
+          style={styles.categoryPill}
+          onPress={() => logout()}
+        >
+          <Text>Sign Out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Cameras</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Furniture</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Books</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Clothes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Baby Toys</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Mobiles</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      <FlatList
+        data={products}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        refreshing={productLoading}
+        onRefresh={() => getAllProducts()}
+      ></FlatList>
+
+      {/* <Text>{user.email || user.phone.phoneNumber}</Text> */}
+    </SafeAreaView>
   ) : (
     <Splash />
   );
@@ -42,20 +80,30 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     // alignItems: "center",
-    padding: 18,
-    paddingTop: Constants.statusBarHeight + 18,
+    // padding: 18,
+    marginTop: Constants.statusBarHeight + 18,
   },
-  btnText2: {
-    fontWeight: "bold",
-    fontSize: 14,
-    color: "#202020",
+  pillContainer: {
+    marginHorizontal: 18,
+    marginBottom: 18,
+  },
+  categoryPill: {
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    marginRight: 8,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: "#eee",
   },
 });
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-  loading: state.auth.loading,
+  authLoading: state.auth.authLoading,
+  productLoading: state.product.productLoading,
   user: state.auth.user,
+  products: state.product.products,
 });
 
-export default connect(mapStateToProps, { logout })(Home);
+export default connect(mapStateToProps, { logout, getAllProducts })(Home);

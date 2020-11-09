@@ -12,10 +12,12 @@ export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
 export const LOGOUT = "LOGOUT";
-export const LOADING = "LOADING";
-export const STOP_LOADING = "STOP_LOADING";
+export const AUTH_LOADING = "AUTH_LOADING";
+export const STOP_AUTH_LOADING = "STOP_AUTH_LOADING";
 
 // product types
 export const GET_PRODUCT = "GET_PRODUCT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const PRODUCT_ERROR = "PRODUCT_ERROR";
+export const PRODUCT_LOADING = "PRODUCT_LOADING";
+export const STOP_PRODUCT_LOADING = "STOP_PRODUCT_LOADING";
