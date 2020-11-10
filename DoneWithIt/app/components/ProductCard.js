@@ -1,9 +1,19 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
 
-const ProductCard = ({ item }) => {
+import { getProduct } from "../../actions/product";
+
+const ProductCard = ({ item, getProduct, navigateToProductDetails }) => {
   return (
-    <TouchableOpacity activeOpacity={0.6} style={styles.cardContainer}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={styles.cardContainer}
+      onPress={() => {
+        getProduct({ productId: item._id });
+        navigateToProductDetails();
+      }}
+    >
       <Image
         source={{ uri: item.imageUrls[0] }}
         style={styles.productImage}
@@ -28,14 +38,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#eee",
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 5,
-    // elevation: 5,
     marginHorizontal: 18,
     marginBottom: 18,
   },
@@ -67,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductCard;
+export default connect(null, { getProduct })(ProductCard);

@@ -24,12 +24,20 @@ const Home = ({
   authLoading,
   user,
   products,
+  navigation,
 }) => {
   useEffect(() => {
     getAllProducts();
   }, [getAllProducts]);
 
-  const renderItem = ({ item }) => <ProductCard item={item} />;
+  const navigateToProductDetails = () => navigation.navigate("ProductDetails");
+
+  const renderItem = ({ item }) => (
+    <ProductCard
+      item={item}
+      navigateToProductDetails={navigateToProductDetails}
+    />
+  );
 
   return isAuthenticated && !authLoading && !productLoading && user ? (
     <SafeAreaView style={styles.container}>
@@ -66,6 +74,7 @@ const Home = ({
         keyExtractor={(item) => item._id}
         refreshing={productLoading}
         onRefresh={() => getAllProducts()}
+        bounces={true}
       ></FlatList>
 
       {/* <Text>{user.email || user.phone.phoneNumber}</Text> */}
