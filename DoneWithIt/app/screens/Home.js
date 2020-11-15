@@ -50,6 +50,9 @@ const Home = ({
           <Text>Sign Out</Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
+          <Text>Clothes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
           <Text>Cameras</Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
@@ -59,16 +62,13 @@ const Home = ({
           <Text>Books</Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Clothes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
           <Text>Baby Toys</Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
           <Text>Mobiles</Text>
         </TouchableOpacity>
       </ScrollView>
-      {products && (
+      {products || products.length > 0 ? (
         <FlatList
           data={products}
           renderItem={renderItem}
@@ -77,6 +77,8 @@ const Home = ({
           onRefresh={() => getAllProducts()}
           bounces={true}
         ></FlatList>
+      ) : (
+        <Text>No products to display!</Text>
       )}
 
       {/* <Text>{user.email || user.phone.phoneNumber}</Text> */}
@@ -103,6 +105,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     paddingBottom: 10,
+    height: 34,
     marginRight: 8,
     borderRadius: 22,
     borderWidth: 1,
