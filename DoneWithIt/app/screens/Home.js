@@ -68,14 +68,16 @@ const Home = ({
           <Text>Mobiles</Text>
         </TouchableOpacity>
       </ScrollView>
-      <FlatList
-        data={products}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id}
-        refreshing={productLoading}
-        onRefresh={() => getAllProducts()}
-        bounces={true}
-      ></FlatList>
+      {products && (
+        <FlatList
+          data={products}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id}
+          refreshing={productLoading}
+          onRefresh={() => getAllProducts()}
+          bounces={true}
+        ></FlatList>
+      )}
 
       {/* <Text>{user.email || user.phone.phoneNumber}</Text> */}
     </SafeAreaView>
@@ -99,7 +101,8 @@ const styles = StyleSheet.create({
   categoryPill: {
     backgroundColor: "#ffffff",
     paddingHorizontal: 14,
-    paddingVertical: 9,
+    paddingVertical: 6,
+    paddingBottom: 10,
     marginRight: 8,
     borderRadius: 22,
     borderWidth: 1,

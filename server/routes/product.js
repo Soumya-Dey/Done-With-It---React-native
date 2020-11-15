@@ -80,4 +80,26 @@ router.get("/:productId", authToken, async (req, res) => {
   }
 });
 
+// @route GET api/product/category/:category
+// @desc get products by category
+// @access Private
+router.get("/category/:category", authToken, async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Product.find({ category }).populate("seller", [
+      "name",
+      "email",
+    ]);
+
+    if (products.length === 0 || !products)
+      return res.status(400).json({
+        errors: [{ msg: "No product found!" }],
+      });
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).send("server error");
+  }
+});
+
 module.exports = router;
