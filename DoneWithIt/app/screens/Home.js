@@ -12,13 +12,16 @@ import { connect } from "react-redux";
 import Constants from "expo-constants";
 
 import { logout } from "../../actions/auth";
-import { getAllProducts } from "../../actions/product";
+import { getAllProducts, getProductsByCategory } from "../../actions/product";
 import Splash from "./Splash";
 import ProductCard from "../components/ProductCard";
+import CategoryPill from "../components/CategoryPill";
+import { categories } from "../../utils/categoryList";
 
 const Home = ({
   logout,
   getAllProducts,
+  getProductsByCategory,
   isAuthenticated,
   productLoading,
   authLoading,
@@ -30,16 +33,29 @@ const Home = ({
     getAllProducts();
   }, [getAllProducts]);
 
+  const filterProductsByCategory = ({ category }) => {
+    getProductsByCategory({ category });
+  };
+
   const navigateToProductDetails = () => navigation.navigate("ProductDetails");
 
-  const renderItem = ({ item }) => (
+  const renderProductItem = ({ item }) => (
     <ProductCard
       item={item}
       navigateToProductDetails={navigateToProductDetails}
     />
   );
 
-  return isAuthenticated && !authLoading && !productLoading && user ? (
+  const renderPill = ({ category, key }) => (
+    <CategoryPill
+      category={category}
+      key={key}
+      filterProductsByCategory={filterProductsByCategory}
+      clearProductFilter={getAllProducts}
+    />
+  );
+
+  return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.pillContainer} horizontal={true}>
         <TouchableOpacity
@@ -49,56 +65,39 @@ const Home = ({
         >
           <Text>Sign Out</Text>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Clothes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Cameras</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Furniture</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Books</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Baby Toys</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.2} style={styles.categoryPill}>
-          <Text>Mobiles</Text>
-        </TouchableOpacity>
+        {categories.map((category, index) =>
+          renderPill({ category, key: index })
+        )}
       </ScrollView>
-      {products || products.length > 0 ? (
+      {isAuthenticated && !authLoading && !productLoading && user ? (
         <FlatList
+          style={styles.productList}
           data={products}
-          renderItem={renderItem}
+          renderItem={renderProductItem}
           keyExtractor={(item) => item._id}
           refreshing={productLoading}
           onRefresh={() => getAllProducts()}
           bounces={true}
         ></FlatList>
       ) : (
-        <Text>No products to display!</Text>
+        <Splash />
       )}
 
       {/* <Text>{user.email || user.phone.phoneNumber}</Text> */}
     </SafeAreaView>
-  ) : (
-    <Splash />
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // padding: 18,
     marginTop: Constants.statusBarHeight + 18,
   },
   pillContainer: {
     marginHorizontal: 18,
     marginBottom: 18,
+    minHeight: 34,
+    maxHeight: 34,
   },
   categoryPill: {
     backgroundColor: "#ffffff",
@@ -121,4 +120,8 @@ const mapStateToProps = (state) => ({
   products: state.product.products,
 });
 
-export default connect(mapStateToProps, { logout, getAllProducts })(Home);
+export default connect(mapStateToProps, {
+  logout,
+  getAllProducts,
+  getProductsByCategory,
+})(Home);

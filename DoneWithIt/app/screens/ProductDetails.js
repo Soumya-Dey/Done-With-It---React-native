@@ -16,9 +16,9 @@ import Splash from "./Splash";
 const ProductDetails = ({ product, productLoading, navigation }) => {
   return !productLoading && product ? (
     <SafeAreaView style={styles.container}>
-      {/* TODO: ADD A GO BACK BUTTON AT TOP LEFT CORNER OF SCREEN */}
       <TouchableOpacity
         style={styles.backButton}
+        activeOpacity={0.6}
         onPress={() => navigation.dispatch(CommonActions.goBack())}
       >
         <Ionicons name="ios-arrow-back" size={24} color="black" />
