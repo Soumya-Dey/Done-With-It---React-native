@@ -16,8 +16,6 @@ import { CommonActions } from "@react-navigation/native";
 import Splash from "./Splash";
 
 const ProductDetails = ({ product, productLoading, navigation }) => {
-  console.log(product);
-
   return !productLoading && product ? (
     <View style={styles.container}>
       <TouchableOpacity

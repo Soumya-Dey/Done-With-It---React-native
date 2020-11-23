@@ -1,5 +1,3 @@
-import AsyncStorage from "@react-native-community/async-storage";
-
 import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
@@ -45,11 +43,6 @@ export default function (state = initialState, action) {
     // loggin in a  user
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      AsyncStorage.setItem(
-        "token",
-        action.payload.token,
-        (err) => new Error(err)
-      );
       return {
         ...state,
         ...action.payload,
@@ -66,7 +59,6 @@ export default function (state = initialState, action) {
     case AUTH_ERROR:
     case LOGOUT:
     case ACCOUNT_DELETED:
-      AsyncStorage.removeItem("token", (err) => new Error(err));
       return {
         ...state,
         token: null,

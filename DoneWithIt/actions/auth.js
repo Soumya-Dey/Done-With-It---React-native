@@ -1,5 +1,5 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-community/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 import { setAlert } from "./alert";
 import setAuthToken from "../utils/setAuthToken";
@@ -25,7 +25,7 @@ export const loadUser = () => async (dispatch) => {
     });
 
     // setting the token to the headers globally
-    const token = await AsyncStorage.getItem("token");
+    const token = await SecureStore.getItemAsync("token");
     if (token !== null) setAuthToken(token);
 
     // get the user data
@@ -97,6 +97,8 @@ export const verifyOtp = ({ phone, code }) => async (dispatch) => {
       payload: res.data,
     });
 
+    await SecureStore.setItemAsync("token", res.data.token);
+
     // load the user after login
     dispatch(loadUser());
   } catch (error) {
@@ -132,6 +134,8 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
+
+    await SecureStore.setItemAsync("token", res.data.token);
 
     // load user after registration
     dispatch(loadUser());
@@ -169,6 +173,8 @@ export const login = ({ email, password }) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
+
+    await SecureStore.setItemAsync("token", res.data.token);
 
     // load the user after login
     dispatch(loadUser());
@@ -240,4 +246,5 @@ export const login = ({ email, password }) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   // dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
+  await SecureStore.deleteItemAsync("token");
 };

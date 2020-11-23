@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Constants from "expo-constants";
+import Modal from "react-native-modal";
 
 import { logout } from "../../actions/auth";
 import { getAllProducts, getProductsByCategory } from "../../actions/product";
@@ -69,16 +70,24 @@ const Home = ({
           renderPill({ category, key: index })
         )}
       </ScrollView>
-      {isAuthenticated && !authLoading && !productLoading && user ? (
-        <FlatList
-          style={styles.productList}
-          data={products}
-          renderItem={renderProductItem}
-          keyExtractor={(item) => item._id}
-          refreshing={productLoading}
-          onRefresh={() => getAllProducts()}
-          bounces={true}
-        ></FlatList>
+      {isAuthenticated &&
+      !authLoading &&
+      !productLoading &&
+      user &&
+      products ? (
+        products.length > 0 ? (
+          <FlatList
+            style={styles.productList}
+            data={products}
+            renderItem={renderProductItem}
+            keyExtractor={(item) => item._id}
+            refreshing={productLoading}
+            onRefresh={() => getAllProducts()}
+            bounces={true}
+          ></FlatList>
+        ) : (
+          <Text>no products</Text>
+        )
       ) : (
         <Splash />
       )}

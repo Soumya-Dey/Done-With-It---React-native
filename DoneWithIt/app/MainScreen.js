@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { connect } from "react-redux";
-import AsyncStorage from "@react-native-community/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import SignIn from "./screens/SignIn";
@@ -125,7 +124,7 @@ const HomeBottomTabsScreen = () => (
       activeTintColor: "#1dd1a1",
       inactiveTintColor: "gray",
       showLabel: false,
-      style: { height: 60 },
+      style: { height: 60, elevation: 0, shadowOpacity: 0 },
     }}
   >
     <HomeBottomTabs.Screen
@@ -156,7 +155,7 @@ const RootStackScreen = ({ isAuthenticated, loadUser }) => {
           name="Home"
           component={HomeBottomTabsScreen}
           // options={{
-          //   animationEnabled: false
+          //   animationEnabled: false,
           // }}
         />
       ) : (

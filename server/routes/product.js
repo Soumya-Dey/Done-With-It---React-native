@@ -91,10 +91,11 @@ router.get("/category/:category", authToken, async (req, res) => {
       "email",
     ]);
 
-    if (products.length === 0 || !products)
+    if (!products) {
       return res.status(400).json({
         errors: [{ msg: "No product found!" }],
       });
+    }
 
     res.json(products);
   } catch (error) {
