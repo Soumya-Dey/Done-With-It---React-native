@@ -11,7 +11,12 @@ const router = express.Router();
 // @access Private
 router.get("/", authToken, async (req, res) => {
   try {
-    const products = await Product.find().populate("seller", ["name", "email"]);
+    const products = await Product.find().populate("seller", [
+      "name",
+      "email",
+      "phone",
+      "productListings",
+    ]);
 
     if (products.length === 0 || !products)
       return res.status(400).json({
@@ -67,6 +72,8 @@ router.get("/:productId", authToken, async (req, res) => {
     const product = await Product.findById(productId).populate("seller", [
       "name",
       "email",
+      "phone",
+      "productListings",
     ]);
 
     if (!product)
@@ -89,6 +96,8 @@ router.get("/category/:category", authToken, async (req, res) => {
     const products = await Product.find({ category }).populate("seller", [
       "name",
       "email",
+      "phone",
+      "productListings",
     ]);
 
     if (!products) {
